@@ -21,27 +21,43 @@ export const LoginScreen: React.FC = () => {
         callback: async (tokenResponse: any) => {
           if (tokenResponse && tokenResponse.access_token) {
             try {
-              // Fetch user profile and birthday details
-              const res = await fetch('https://people.googleapis.com/v1/people/me?personFields=names,photos,emailAddresses,birthdays', {
+              // 1. Fetch user profile from the standard OAuth2 userinfo endpoint (always works, does not require People API enabled)
+              const profileRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
                 headers: {
                   Authorization: `Bearer ${tokenResponse.access_token}`
                 }
               });
-              const data = await res.json();
+              const profileData = await profileRes.json();
               
-              const name = data.names?.[0]?.displayName || 'User';
-              const email = data.emailAddresses?.[0]?.value || '';
-              const avatar = data.photos?.[0]?.url || '';
+              const name = profileData.name || 'User';
+              const email = profileData.email || '';
+              const avatar = profileData.picture || '';
               
+              // 2. Fetch birthday from People API (wrapped in try-catch in case it's disabled)
               let birthday = '';
-              const birthdays = data.birthdays || [];
-              const bday = birthdays.find((b: any) => b.date && b.date.month && b.date.day);
-              if (bday) {
-                const year = bday.date.year || 2026;
-                const month = String(bday.date.month).padStart(2, '0');
-                const day = String(bday.date.day).padStart(2, '0');
-                birthday = `${year}-${month}-${day}`;
-              } else {
+              try {
+                const bdayRes = await fetch('https://people.googleapis.com/v1/people/me?personFields=birthdays', {
+                  headers: {
+                    Authorization: `Bearer ${tokenResponse.access_token}`
+                  }
+                });
+                if (bdayRes.ok) {
+                  const bdayData = await bdayRes.json();
+                  const birthdays = bdayData.birthdays || [];
+                  const bday = birthdays.find((b: any) => b.date && b.date.month && b.date.day);
+                  if (bday) {
+                    const year = bday.date.year || 2026;
+                    const month = String(bday.date.month).padStart(2, '0');
+                    const day = String(bday.date.day).padStart(2, '0');
+                    birthday = `${year}-${month}-${day}`;
+                  }
+                }
+              } catch (err) {
+                console.error('Error fetching Google birthday:', err);
+              }
+
+              // 3. Fallback to today's date if no birthday is found or API call failed
+              if (!birthday) {
                 const today = new Date();
                 const year = 2026;
                 const month = String(today.getMonth() + 1).padStart(2, '0');

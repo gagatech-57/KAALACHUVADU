@@ -233,7 +233,27 @@ export const Sidebar: React.FC = () => {
       {user && (
         <div className="sidebar-user-footer">
           <div className="user-profile-bar">
-            <img src={user.avatar} alt={user.name} className="user-avatar" />
+            {user.avatar ? (
+              <img 
+                src={user.avatar} 
+                alt={user.name} 
+                className="user-avatar" 
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                  const parent = (e.target as HTMLImageElement).parentElement;
+                  if (parent && !parent.querySelector('.user-avatar-placeholder')) {
+                    const initials = document.createElement('div');
+                    initials.className = 'user-avatar-placeholder';
+                    initials.innerText = user.name ? user.name.charAt(0).toUpperCase() : 'U';
+                    parent.insertBefore(initials, parent.firstChild);
+                  }
+                }}
+              />
+            ) : (
+              <div className="user-avatar-placeholder">
+                {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+              </div>
+            )}
             <div className="user-info">
               <span className="user-name">{user.name}</span>
               <button className="btn-logout" onClick={logout} title={language === 'ta' ? "வெளியேறு" : "Logout"}>

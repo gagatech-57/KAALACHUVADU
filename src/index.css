@@ -787,3 +787,20 @@ body {
   user-select: none;
   opacity: 0.6;
 }
+
+/* User avatar fallback placeholder style */
+.user-avatar-placeholder {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--accent-color);
+  color: var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border: 1px solid var(--border-color);
+  flex-shrink: 0;
+}

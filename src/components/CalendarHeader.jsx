@@ -1,8 +1,7 @@
 import React from 'react';
 import { useCalendar } from '../context/CalendarContext';
-import type { CalendarView } from '../types';
 
-export const CalendarHeader: React.FC = () => {
+export const CalendarHeader = () => {
   const {
     currentDate,
     setCurrentDate,
@@ -22,9 +21,9 @@ export const CalendarHeader: React.FC = () => {
   };
 
   // Header Title generation
-  const getHeaderTitle = (): string => {
+  const getHeaderTitle = () => {
     const locale = language === 'ta' ? 'ta-IN' : 'en-US';
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long' };
+    const options = { year: 'numeric', month: 'long' };
     
     if (currentView === 'month' || currentView === 'agenda') {
       return currentDate.toLocaleDateString(locale, options);
@@ -66,7 +65,7 @@ export const CalendarHeader: React.FC = () => {
     return '';
   };
 
-  const views: { id: CalendarView; label: string }[] = [
+  const views = [
     { id: 'month', label: language === 'ta' ? 'மாதம்' : 'Month' },
     { id: 'week', label: language === 'ta' ? 'வாரம்' : 'Week' },
     { id: 'day', label: language === 'ta' ? 'நாள்' : 'Day' },
@@ -227,7 +226,7 @@ export const CalendarHeader: React.FC = () => {
             display: none;
           }
           .view-tabs {
-            display: none; /* In mobile, view transitions can be moved to dropdowns or compact views, or just standard tabs */
+            display: none;
           }
         }
       `}</style>

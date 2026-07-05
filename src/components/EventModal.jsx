@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useCalendar } from '../context/CalendarContext';
 import { CATEGORY_OPTIONS } from '../types';
-import type { Category } from '../types';
 
-export const EventModal: React.FC = () => {
+export const EventModal = () => {
   const {
     isEventModalOpen,
     setEventModalOpen,
@@ -17,7 +16,7 @@ export const EventModal: React.FC = () => {
 
   // Form states
   const [title, setTitle] = useState('');
-  const [category, setCategory] = useState<Category>('work');
+  const [category, setCategory] = useState('work');
   const [color, setColor] = useState('#6366f1');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -28,12 +27,10 @@ export const EventModal: React.FC = () => {
   const [description, setDescription] = useState('');
 
   // Error states
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [errors, setErrors] = useState({});
 
   // Sync category colors
   useEffect(() => {
-    // Only auto-update color on category change if creating a new event,
-    // or if the category was changed in edit mode and matches the old category's default color.
     const selectedOption = CATEGORY_OPTIONS.find(c => c.value === category);
     if (selectedOption) {
       setColor(selectedOption.color);
@@ -95,7 +92,7 @@ export const EventModal: React.FC = () => {
 
   // Basic validation rules
   const validateForm = () => {
-    const newErrors: { [key: string]: string } = {};
+    const newErrors = {};
 
     if (!title.trim()) {
       newErrors.title = 'நிகழ்ச்சியின் தலைப்பு தேவை';
@@ -126,7 +123,7 @@ export const EventModal: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = (e) => {
     e.preventDefault();
 
     if (!validateForm()) return;
@@ -215,7 +212,7 @@ export const EventModal: React.FC = () => {
               <label className="form-label">வகை</label>
               <select
                 value={category}
-                onChange={(e) => setCategory(e.target.value as Category)}
+                onChange={(e) => setCategory(e.target.value)}
                 className="form-input"
               >
                 {CATEGORY_OPTIONS.map((opt) => (

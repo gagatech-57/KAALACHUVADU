@@ -9,7 +9,7 @@ import { AgendaView } from './components/AgendaView';
 import { EventModal } from './components/EventModal';
 import { LoginScreen } from './components/LoginScreen';
 
-const SplashScreen: React.FC = () => {
+const SplashScreen = () => {
   return (
     <div className="splash-container">
       <div className="splash-content">
@@ -30,7 +30,7 @@ const SplashScreen: React.FC = () => {
   );
 };
 
-const CalendarAppContent: React.FC = () => {
+const CalendarAppContent = () => {
   const { currentView, language, user } = useCalendar();
   const [showSplash, setShowSplash] = React.useState(true);
 

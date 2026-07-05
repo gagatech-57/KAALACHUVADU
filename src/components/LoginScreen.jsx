@@ -2,11 +2,11 @@ import React from 'react';
 import { useCalendar } from '../context/CalendarContext';
 import templeImg from '../assets/temple_login.png';
 
-export const LoginScreen: React.FC = () => {
+export const LoginScreen = () => {
   const { language, setLanguage, setUser } = useCalendar();
 
   const handleGoogleLogin = () => {
-    if (!(window as any).google) {
+    if (!window.google) {
       alert(language === 'ta' 
         ? 'கூகுள் உள்நுழைவு இன்னும் தயாராகவில்லை. தயவுசெய்து சிறிது நேரம் கழித்து மீண்டும் முயற்சிக்கவும்.'
         : 'Google Sign-In is not initialized yet. Please wait a moment and try again.'
@@ -15,10 +15,10 @@ export const LoginScreen: React.FC = () => {
     }
 
     try {
-      const client = (window as any).google.accounts.oauth2.initTokenClient({
+      const client = window.google.accounts.oauth2.initTokenClient({
         client_id: '236388446658-0nbdue074ns31f9ktf4k6ojht3rdf539.apps.googleusercontent.com',
         scope: 'openid profile email https://www.googleapis.com/auth/user.birthday.read',
-        callback: async (tokenResponse: any) => {
+        callback: async (tokenResponse) => {
           if (tokenResponse && tokenResponse.access_token) {
             try {
               // 1. Fetch user profile from the standard OAuth2 userinfo endpoint (always works, does not require People API enabled)
@@ -44,7 +44,7 @@ export const LoginScreen: React.FC = () => {
                 if (bdayRes.ok) {
                   const bdayData = await bdayRes.json();
                   const birthdays = bdayData.birthdays || [];
-                  const bday = birthdays.find((b: any) => b.date && b.date.month && b.date.day);
+                  const bday = birthdays.find((b) => b.date && b.date.month && b.date.day);
                   if (bday) {
                     const year = bday.date.year || 2026;
                     const month = String(bday.date.month).padStart(2, '0');

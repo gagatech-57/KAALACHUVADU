@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useCalendar, formatDateString } from '../context/CalendarContext';
 
-export const MiniCalendar: React.FC = () => {
+export const MiniCalendar = () => {
   const { currentDate, setCurrentDate, language } = useCalendar();
-  const [viewDate, setViewDate] = useState<Date>(new Date(currentDate));
+  const [viewDate, setViewDate] = useState(new Date(currentDate));
 
   // Sync viewDate when currentDate changes globally
   useEffect(() => {
@@ -27,7 +27,7 @@ export const MiniCalendar: React.FC = () => {
     const totalDays = new Date(year, month + 1, 0).getDate();
     const prevTotalDays = new Date(year, month, 0).getDate();
 
-    const daysList: { date: Date; isCurrentMonth: boolean }[] = [];
+    const daysList = [];
 
     // Prev month days
     for (let i = firstDayIndex - 1; i >= 0; i--) {
@@ -70,11 +70,11 @@ export const MiniCalendar: React.FC = () => {
     ? ['ஞா', 'தி', 'செ', 'பு', 'வி', 'வெ', 'ச']
     : ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
-  const isToday = (date: Date) => {
+  const isToday = (date) => {
     return formatDateString(date) === formatDateString(new Date());
   };
 
-  const isSelected = (date: Date) => {
+  const isSelected = (date) => {
     return formatDateString(date) === formatDateString(currentDate);
   };
 
@@ -103,50 +103,56 @@ export const MiniCalendar: React.FC = () => {
       </div>
 
       <div className="mini-cal-days">
-        {days.map((item, idx) => (
-          <button
-            key={idx}
-            onClick={() => setCurrentDate(item.date)}
-            className={`mini-cal-day-cell ${
-              !item.isCurrentMonth ? 'outside' : ''
-            } ${isToday(item.date) ? 'today' : ''} ${
-              isSelected(item.date) ? 'selected' : ''
-            }`}
-          >
-            {item.date.getDate()}
-          </button>
-        ))}
+        {days.map((cell, idx) => {
+          const isCellToday = isToday(cell.date);
+          const isCellSelected = isSelected(cell.date);
+          
+          return (
+            <button
+              key={idx}
+              onClick={() => setCurrentDate(cell.date)}
+              className={`mini-cal-day-cell 
+                ${cell.isCurrentMonth ? 'current-month' : 'other-month'}
+                ${isCellToday ? 'today' : ''}
+                ${isCellSelected ? 'selected' : ''}
+              `}
+            >
+              {cell.date.getDate()}
+            </button>
+          );
+        })}
       </div>
 
       <style>{`
         .mini-calendar {
-          padding: 1rem;
-          border-radius: 16px;
-          background: var(--bg-secondary);
-          border: 1px solid var(--border-color);
-          margin-bottom: 1.2rem;
           width: 100%;
+          padding: 8px;
+          background-color: var(--bg-secondary);
+          border-radius: 12px;
+          border: 1px solid var(--border-color);
+          box-shadow: var(--shadow-sm);
         }
         .mini-cal-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: 0.8rem;
+          margin-bottom: 8px;
+          padding: 0 4px;
         }
         .mini-cal-title {
-          font-size: 0.95rem;
-          font-weight: 600;
+          font-size: 0.85rem;
+          font-weight: 700;
           color: var(--text-primary);
         }
         .mini-cal-nav {
           display: flex;
-          gap: 4px;
+          gap: 2px;
         }
         .mini-cal-btn {
-          width: 26px;
-          height: 26px;
           border: none;
           background: transparent;
+          width: 24px;
+          height: 24px;
           border-radius: 50%;
           display: flex;
           align-items: center;
@@ -156,7 +162,7 @@ export const MiniCalendar: React.FC = () => {
           transition: all var(--transition-fast);
         }
         .mini-cal-btn:hover {
-          background: var(--bg-hover);
+          background-color: var(--bg-hover);
           color: var(--text-primary);
         }
         .mini-cal-weekdays {
@@ -166,11 +172,10 @@ export const MiniCalendar: React.FC = () => {
           margin-bottom: 4px;
         }
         .mini-cal-weekday {
-          font-size: 0.75rem;
+          font-size: 0.72rem;
           font-weight: 600;
           color: var(--text-muted);
           padding: 4px 0;
-          font-family: 'Share Tech Mono', monospace;
         }
         .mini-cal-days {
           display: grid;
@@ -178,36 +183,38 @@ export const MiniCalendar: React.FC = () => {
           gap: 2px;
         }
         .mini-cal-day-cell {
-          aspect-ratio: 1;
           border: none;
           background: transparent;
-          border-radius: 8px;
-          font-size: 0.8rem;
-          font-weight: 500;
-          color: var(--text-primary);
-          font-family: 'Share Tech Mono', monospace;
+          aspect-ratio: 1;
           display: flex;
           align-items: center;
           justify-content: center;
+          font-family: inherit;
+          font-size: 0.75rem;
+          font-weight: 600;
+          border-radius: 50%;
           cursor: pointer;
           transition: all var(--transition-fast);
         }
-        .mini-cal-day-cell:hover {
-          background: var(--bg-hover);
+        .mini-cal-day-cell.current-month {
+          color: var(--text-primary);
         }
-        .mini-cal-day-cell.outside {
+        .mini-cal-day-cell.other-month {
           color: var(--text-muted);
-          opacity: 0.45;
+          opacity: 0.5;
+        }
+        .mini-cal-day-cell:hover {
+          background-color: var(--bg-hover);
         }
         .mini-cal-day-cell.today {
-          border: 1px solid var(--accent-color);
+          border: 1.5px solid var(--accent-color);
           color: var(--accent-color);
-          font-weight: 600;
+          font-weight: 700;
         }
         .mini-cal-day-cell.selected {
-          background: var(--accent-color) !important;
+          background-color: var(--accent-color) !important;
           color: var(--bg-secondary) !important;
-          font-weight: 600;
+          font-weight: 700;
         }
       `}</style>
     </div>

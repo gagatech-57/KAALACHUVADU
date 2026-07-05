@@ -1,59 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { CATEGORY_OPTIONS } from '../types';
-import type { CalendarEvent, CalendarView, Category } from '../types';
 
-export interface GoogleUser {
-  name: string;
-  email: string;
-  avatar: string;
-  birthday?: string;
-}
-
-interface CalendarContextType {
-  currentDate: Date;
-  setCurrentDate: (date: Date) => void;
-  currentView: CalendarView;
-  setCurrentView: (view: CalendarView) => void;
-  events: CalendarEvent[];
-  addEvent: (event: Omit<CalendarEvent, 'id'>) => void;
-  updateEvent: (event: CalendarEvent) => void;
-  deleteEvent: (id: string) => void;
-  selectedCategories: Category[];
-  toggleCategory: (category: Category) => void;
-  searchQuery: string;
-  setSearchQuery: (query: string) => void;
-  isSidebarOpen: boolean;
-  toggleSidebar: () => void;
-  selectedEventForEdit: CalendarEvent | null;
-  setSelectedEventForEdit: (event: CalendarEvent | null) => void;
-  isEventModalOpen: boolean;
-  setEventModalOpen: (open: boolean) => void;
-  modalInitialDate: { startDate: string; startTime?: string } | null;
-  setModalInitialDate: (val: { startDate: string; startTime?: string } | null) => void;
-  filteredEvents: CalendarEvent[];
-  importEvents: (importedEvents: CalendarEvent[]) => boolean;
-  navigatePrev: () => void;
-  navigateNext: () => void;
-  language: 'ta' | 'en';
-  setLanguage: (lang: 'ta' | 'en') => void;
-  theme: 'light' | 'dark';
-  setTheme: (theme: 'light' | 'dark') => void;
-  user: GoogleUser | null;
-  setUser: (user: GoogleUser | null) => void;
-  logout: () => void;
-}
-
-const CalendarContext = createContext<CalendarContextType | undefined>(undefined);
-
-// Helper to format Date to YYYY-MM-DD local string
-export const formatDateString = (date: Date): string => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
-
-export const seededEventTranslations: Record<string, { title: { ta: string; en: string }; description?: { ta: string; en: string }; location?: { ta: string; en: string } }> = {
+export const seededEventTranslations = {
   'in-1': {
     title: { ta: 'குடியரசு தினம்', en: 'Republic Day' },
     description: { ta: 'இந்திய அரசியலமைப்பு சட்டம் நடைமுறைக்கு வந்த நாள்.', en: 'Adoption of the Constitution of India.' },
@@ -156,7 +104,7 @@ export const seededEventTranslations: Record<string, { title: { ta: string; en: 
   },
   'tn-thiruvalluvar': {
     title: { ta: 'திருவள்ளுவர் தினம்', en: 'Thiruvalluvar Day' },
-    description: { ta: 'வள்ளுவர் தினக் கொண்டாட்டம்.', en: 'Celebration of Thiruvalluvar, ancient Tamil poet.' },
+    description: { ta: 'வள்ளuவர் தினக் கொண்டாட்டம்.', en: 'Celebration of Thiruvalluvar, ancient Tamil poet.' },
     location: { ta: 'தமிழ்நாடு', en: 'Tamil Nadu' }
   },
   'tn-uzhavar': {
@@ -196,11 +144,10 @@ export const seededEventTranslations: Record<string, { title: { ta: string; en: 
   }
 };
 
-const SEED_EVENTS = (): CalendarEvent[] => {
+const SEED_EVENTS = () => {
   const holidayColor = CATEGORY_OPTIONS.find(c => c.value === 'holiday')?.color || '#b8583c';
-
   return [
-    // Indian Gazetted Holidays 2026
+    // National Holidays India 2026
     {
       id: 'in-1',
       title: 'குடியரசு தினம்',
@@ -238,8 +185,8 @@ const SEED_EVENTS = (): CalendarEvent[] => {
       id: 'in-4',
       title: 'ரம்சான் (ஈகைப் பெருநாள்)',
       description: 'ரமலான் நோன்பு முடிவைக் குறிக்கும் இஸ்லாமிய திருவிழா.',
-      startDate: '2026-03-21',
-      endDate: '2026-03-21',
+      startDate: '2026-03-20',
+      endDate: '2026-03-20',
       allDay: true,
       category: 'holiday',
       color: holidayColor,
@@ -249,8 +196,8 @@ const SEED_EVENTS = (): CalendarEvent[] => {
       id: 'in-5',
       title: 'ராம நவமி',
       description: 'ஸ்ரீ ராமரின் பிறப்பைக் கொண்டாடும் திருவிழா.',
-      startDate: '2026-03-26',
-      endDate: '2026-03-26',
+      startDate: '2026-03-27',
+      endDate: '2026-03-27',
       allDay: true,
       category: 'holiday',
       color: holidayColor,
@@ -282,8 +229,8 @@ const SEED_EVENTS = (): CalendarEvent[] => {
       id: 'in-8',
       title: 'புத்த பூர்ணிமா',
       description: 'புத்தரின் பிறப்பு மற்றும் ஞானம் பெற்ற நாளைக் கொண்டாடும் விழா.',
-      startDate: '2026-05-01',
-      endDate: '2026-05-01',
+      startDate: '2026-05-02',
+      endDate: '2026-05-02',
       allDay: true,
       category: 'holiday',
       color: holidayColor,
@@ -326,8 +273,8 @@ const SEED_EVENTS = (): CalendarEvent[] => {
       id: 'in-12',
       title: 'மிலாத் நபி',
       description: 'நபிகள் நாயகத்தின் பிறந்தநாள்.',
-      startDate: '2026-08-26',
-      endDate: '2026-08-26',
+      startDate: '2026-09-05',
+      endDate: '2026-09-05',
       allDay: true,
       category: 'holiday',
       color: holidayColor,
@@ -337,8 +284,8 @@ const SEED_EVENTS = (): CalendarEvent[] => {
       id: 'in-13',
       title: 'கிருஷ்ண ஜெயந்தி',
       description: 'ஸ்ரீ கிருஷ்ணரின் அவதார தினம்.',
-      startDate: '2026-09-04',
-      endDate: '2026-09-04',
+      startDate: '2026-09-15',
+      endDate: '2026-09-15',
       allDay: true,
       category: 'holiday',
       color: holidayColor,
@@ -513,15 +460,17 @@ const SEED_EVENTS = (): CalendarEvent[] => {
   ];
 };
 
-export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [currentDate, setCurrentDate] = useState<Date>(new Date());
-  const [currentView, setCurrentView] = useState<CalendarView>('month');
-  const [language, setLanguage] = useState<'ta' | 'en'>('ta');
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    return (localStorage.getItem('calendar_theme') as 'light' | 'dark') || 'light';
+const CalendarContext = createContext(undefined);
+
+export const CalendarProvider = ({ children }) => {
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentView, setCurrentView] = useState('month');
+  const [language, setLanguage] = useState('ta');
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('calendar_theme') || 'light';
   });
 
-  const [user, setUser] = useState<GoogleUser | null>(() => {
+  const [user, setUser] = useState(() => {
     const saved = localStorage.getItem('calendar_user');
     return saved ? JSON.parse(saved) : null;
   });
@@ -540,11 +489,11 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   }, [theme]);
   
-  const [events, setEvents] = useState<CalendarEvent[]>(() => {
+  const [events, setEvents] = useState(() => {
     const saved = localStorage.getItem('calendar_events');
     if (saved) {
       try {
-        const parsed = JSON.parse(saved) as CalendarEvent[];
+        const parsed = JSON.parse(saved);
         const hasPongal = parsed.some(e => e.id === 'tn-pongal');
         const hasEnglishPongal = parsed.some(e => e.id === 'tn-pongal' && e.title === 'Pongal');
         const hasMockup = parsed.some(e => ['1', '2', '3', '4', '5', '6'].includes(e.id));
@@ -568,15 +517,15 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return SEED_EVENTS();
   });
 
-  const [selectedCategories, setSelectedCategories] = useState<Category[]>(
+  const [selectedCategories, setSelectedCategories] = useState(
     CATEGORY_OPTIONS.map(c => c.value)
   );
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   
-  const [selectedEventForEdit, setSelectedEventForEdit] = useState<CalendarEvent | null>(null);
-  const [isEventModalOpen, setEventModalOpen] = useState<boolean>(false);
-  const [modalInitialDate, setModalInitialDate] = useState<{ startDate: string; startTime?: string } | null>(null);
+  const [selectedEventForEdit, setSelectedEventForEdit] = useState(null);
+  const [isEventModalOpen, setEventModalOpen] = useState(false);
+  const [modalInitialDate, setModalInitialDate] = useState(null);
 
   // Sync state to localStorage
   useEffect(() => {
@@ -597,7 +546,7 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         );
 
         if (!hasBdayEvent) {
-          const newBdayEvent: CalendarEvent = {
+          const newBdayEvent = {
             id: `event-bday-${Date.now()}`,
             title: language === 'ta' ? `${user.name}-ன் பிறந்தநாள் வாழ்த்துகள்...!` : `Happy Birthday ${user.name}...!`,
             description: language === 'ta' ? `கூகுள் கணக்கிலிருந்து பிறந்தநாள் வாழ்த்து!` : `Birthday celebration from Google account!`,
@@ -656,8 +605,8 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setIsSidebarOpen(prev => !prev);
   };
 
-  const addEvent = async (eventData: Omit<CalendarEvent, 'id'>) => {
-    const newEvent: CalendarEvent = {
+  const addEvent = async (eventData) => {
+    const newEvent = {
       ...eventData,
       id: Math.random().toString(36).substring(2, 9) + Date.now().toString(36),
     };
@@ -678,7 +627,7 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
 
-  const updateEvent = async (updatedEvent: CalendarEvent) => {
+  const updateEvent = async (updatedEvent) => {
     setEvents(prev => prev.map(e => (e.id === updatedEvent.id ? updatedEvent : e)));
     
     if (user) {
@@ -695,7 +644,7 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
 
-  const deleteEvent = async (id: string) => {
+  const deleteEvent = async (id) => {
     setEvents(prev => prev.filter(e => e.id !== id));
     
     if (user) {
@@ -710,7 +659,7 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
 
-  const toggleCategory = (category: Category) => {
+  const toggleCategory = (category) => {
     setSelectedCategories(prev =>
       prev.includes(category)
         ? prev.filter(c => c !== category)
@@ -718,7 +667,7 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     );
   };
 
-  const importEvents = (importedEvents: CalendarEvent[]): boolean => {
+  const importEvents = (importedEvents) => {
     if (!Array.isArray(importedEvents)) return false;
     
     const valid = importedEvents.every(e => 
@@ -728,7 +677,7 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     if (!valid) return false;
 
     setEvents(prev => {
-      const mergedMap = new Map<string, CalendarEvent>();
+      const mergedMap = new Map();
       prev.forEach(e => mergedMap.set(e.id, e));
       importedEvents.forEach(e => mergedMap.set(e.id, e));
       const mergedArray = Array.from(mergedMap.values());
@@ -771,7 +720,6 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setCurrentDate(newDate);
   };
 
-  // Filter and dynamically translate events based on active language state
   const filteredEvents = events.map(event => {
     const translation = seededEventTranslations[event.id];
     if (translation) {
@@ -840,8 +788,15 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
 export const useCalendar = () => {
   const context = useContext(CalendarContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useCalendar must be used within a CalendarProvider');
   }
   return context;
+};
+
+export const formatDateString = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 };

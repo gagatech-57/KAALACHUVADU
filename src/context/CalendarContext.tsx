@@ -583,6 +583,38 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     localStorage.setItem('calendar_events', JSON.stringify(events));
   }, [events]);
 
+  // Synchronize Google User Birthday as an auto-seeded event
+  useEffect(() => {
+    if (user && user.birthday) {
+      const bdayMonthDay = user.birthday.substring(5);
+      const bdayDate2026 = `2026-${bdayMonthDay}`;
+      
+      setEvents(prevEvents => {
+        const hasBdayEvent = prevEvents.some(e => 
+          e.category === 'personal' && 
+          e.startDate === bdayDate2026 && 
+          (e.title.includes('Birthday') || e.title.includes('பிறந்தநாள்'))
+        );
+
+        if (!hasBdayEvent) {
+          const newBdayEvent: CalendarEvent = {
+            id: `event-bday-${Date.now()}`,
+            title: language === 'ta' ? `${user.name}-ன் பிறந்தநாள் வாழ்த்துகள்...!` : `Happy Birthday ${user.name}...!`,
+            description: language === 'ta' ? `கூகுள் கணக்கிலிருந்து பிறந்தநாள் வாழ்த்து!` : `Birthday celebration from Google account!`,
+            startDate: bdayDate2026,
+            endDate: bdayDate2026,
+            allDay: true,
+            category: 'personal',
+            color: '#e06666',
+            location: 'Google'
+          };
+          return [...prevEvents, newBdayEvent];
+        }
+        return prevEvents;
+      });
+    }
+  }, [user, language]);
+
 
 
   const toggleSidebar = () => {

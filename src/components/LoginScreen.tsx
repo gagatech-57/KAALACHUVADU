@@ -3,7 +3,7 @@ import { useCalendar } from '../context/CalendarContext';
 import templeImg from '../assets/temple_login.png';
 
 export const LoginScreen: React.FC = () => {
-  const { language, setLanguage, setUser, addEvent } = useCalendar();
+  const { language, setLanguage, setUser } = useCalendar();
 
   const handleGoogleLogin = () => {
     if (!(window as any).google) {
@@ -41,25 +41,17 @@ export const LoginScreen: React.FC = () => {
                 const month = String(bday.date.month).padStart(2, '0');
                 const day = String(bday.date.day).padStart(2, '0');
                 birthday = `${year}-${month}-${day}`;
+              } else {
+                const today = new Date();
+                const year = 2026;
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                birthday = `${year}-${month}-${day}`;
               }
 
               const newUser = { name, email, avatar, birthday };
               setUser(newUser);
               localStorage.setItem('calendar_user', JSON.stringify(newUser));
-
-              if (birthday) {
-                const bdayDate2026 = `2026-${String(bday.date.month).padStart(2, '0')}-${String(bday.date.day).padStart(2, '0')}`;
-                addEvent({
-                  title: language === 'ta' ? 'பிறந்தநாள் வாழ்த்துகள்...!' : 'Happy Birthday...!',
-                  description: language === 'ta' ? `${name}-ன் பிறந்தநாள்!` : `${name}'s Birthday!`,
-                  startDate: bdayDate2026,
-                  endDate: bdayDate2026,
-                  allDay: true,
-                  category: 'personal',
-                  color: '#e06666',
-                  location: 'Google'
-                });
-              }
             } catch (err) {
               console.error('Error fetching Google details:', err);
               alert(language === 'ta' ? 'விவரங்களைப் பெறுவதில் தோல்வி.' : 'Failed to fetch user details from Google.');

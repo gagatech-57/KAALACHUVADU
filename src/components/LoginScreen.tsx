@@ -128,9 +128,7 @@ export const LoginScreen: React.FC = () => {
         </button>
 
         <p className="login-disclaimer">
-          {language === 'ta' 
-            ? '* உங்கள் பிறந்தநாள் நிகழ்வை காலண்டரில் சேர்க்க உங்கள் கூகுள் பிறந்தநாளைப் பயன்படுத்துகிறோம்.'
-            : '* We access your Google profile birthday to automatically seed your birthday event.'}
+          gaga 2026 ©
         </p>
       </div>
     </div>

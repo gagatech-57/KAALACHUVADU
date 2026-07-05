@@ -190,31 +190,31 @@ export const AgendaView = () => {
           flex-grow: 1;
           display: flex;
           flex-direction: column;
-          height: var(--month-grid-height);
+          height: 100%;
           background-color: var(--bg-secondary);
-          border: 1px solid var(--border-color);
-          border-radius: 16px;
+          border: none;
+          border-radius: 0;
           overflow: hidden;
-          box-shadow: var(--shadow-md);
+          box-shadow: none;
         }
         .agenda-scrollable-content {
-          padding: 1.5rem;
+          padding: 1rem;
           overflow-y: auto;
           display: flex;
           flex-direction: column;
-          gap: 1.5rem;
+          gap: 1rem;
         }
         .agenda-day-group {
           display: flex;
           flex-direction: column;
-          gap: 0.75rem;
+          gap: 0.5rem;
         }
         .agenda-day-header {
           border-bottom: 1.5px solid var(--border-color);
-          padding-bottom: 4px;
+          padding-bottom: 2px;
         }
         .agenda-day-header h4 {
-          font-size: 0.95rem;
+          font-size: 0.9rem;
           font-weight: 700;
           color: var(--accent-color);
           font-family: 'Mukta Malar', sans-serif;
@@ -222,7 +222,7 @@ export const AgendaView = () => {
         .agenda-events-list {
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 6px;
         }
         .agenda-event-card {
           display: flex;
@@ -231,30 +231,30 @@ export const AgendaView = () => {
           background-color: var(--bg-secondary);
           border: 1px solid var(--border-color);
           border-radius: 10px;
-          padding: 0.8rem 1.2rem;
+          padding: 0.6rem 0.8rem;
           cursor: pointer;
           transition: all var(--transition-fast);
         }
         .agenda-event-card:hover {
-          transform: translateX(3px);
+          transform: translateX(2px);
           box-shadow: var(--shadow-sm);
           background-color: var(--bg-hover);
         }
         .agenda-card-left {
           display: flex;
-          align-items: flex-start;
-          gap: 1.2rem;
+          align-items: center;
+          gap: 0.75rem;
           flex-grow: 1;
           min-width: 0;
         }
         .agenda-event-time-badge {
-          width: 80px;
+          width: 72px;
           flex-shrink: 0;
-          padding: 4px 6px;
+          padding: 3px 4px;
           background-color: var(--bg-primary);
           border-radius: 6px;
           text-align: center;
-          font-size: 0.72rem;
+          font-size: 0.7rem;
           font-weight: 700;
           color: var(--text-secondary);
           border: 1px solid var(--border-color);
@@ -262,7 +262,7 @@ export const AgendaView = () => {
         .agenda-event-details {
           display: flex;
           flex-direction: column;
-          gap: 2px;
+          gap: 1px;
           min-width: 0;
         }
         .agenda-event-title {
@@ -347,6 +347,33 @@ export const AgendaView = () => {
           color: var(--text-muted);
           margin-bottom: 1.5rem;
           max-width: 300px;
+        }
+        @media (max-width: 640px) {
+          .agenda-scrollable-content {
+            padding: 0.6rem;
+            gap: 0.8rem;
+          }
+          .agenda-event-card {
+            padding: 0.5rem 0.6rem;
+            border-radius: 8px;
+          }
+          .agenda-card-left {
+            gap: 0.5rem;
+          }
+          .agenda-event-time-badge {
+            width: 60px;
+            font-size: 0.62rem;
+            padding: 2px;
+          }
+          .agenda-event-title {
+            font-size: 0.85rem;
+          }
+          .agenda-event-desc {
+            font-size: 0.72rem;
+          }
+          .agenda-card-right {
+            gap: 0.5rem;
+          }
         }
       `}</style>
     </div>

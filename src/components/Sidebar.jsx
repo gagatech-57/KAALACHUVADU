@@ -342,8 +342,8 @@ export const Sidebar = () => {
             padding: 0.45rem;
           }
 
-          /* ── Mobile sidebar overlay ── */
-          @media (max-width: 640px) {
+          /* ── Mobile/Tablet sidebar overlay ── */
+          @media (max-width: 900px) {
             .sidebar-backdrop {
               display: block;
               position: fixed;

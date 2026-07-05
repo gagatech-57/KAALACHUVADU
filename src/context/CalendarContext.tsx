@@ -2,6 +2,13 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { CATEGORY_OPTIONS } from '../types';
 import type { CalendarEvent, CalendarView, Category } from '../types';
 
+export interface GoogleUser {
+  name: string;
+  email: string;
+  avatar: string;
+  birthday?: string;
+}
+
 interface CalendarContextType {
   currentDate: Date;
   setCurrentDate: (date: Date) => void;
@@ -31,6 +38,9 @@ interface CalendarContextType {
   setLanguage: (lang: 'ta' | 'en') => void;
   theme: 'light' | 'dark';
   setTheme: (theme: 'light' | 'dark') => void;
+  user: GoogleUser | null;
+  setUser: (user: GoogleUser | null) => void;
+  logout: () => void;
 }
 
 const CalendarContext = createContext<CalendarContextType | undefined>(undefined);
@@ -511,6 +521,16 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return (localStorage.getItem('calendar_theme') as 'light' | 'dark') || 'light';
   });
 
+  const [user, setUser] = useState<GoogleUser | null>(() => {
+    const saved = localStorage.getItem('calendar_user');
+    return saved ? JSON.parse(saved) : null;
+  });
+
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('calendar_user');
+  };
+
   useEffect(() => {
     localStorage.setItem('calendar_theme', theme);
     if (theme === 'dark') {
@@ -694,6 +714,9 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setLanguage,
         theme,
         setTheme,
+        user,
+        setUser,
+        logout,
       }}
     >
       {children}

@@ -538,6 +538,237 @@ body {
   color: var(--accent-color);
 }
 
+/* Splash Screen styling */
+.splash-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #ecdcb9;
+  background-image: 
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.15' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.015 0'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.7'/%3E%3C/svg%3E"), 
+    radial-gradient(circle at center, #fdfaf2 0%, #ecdcb9 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.splash-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.splash-wheel {
+  animation: spin-slow 12s linear infinite;
+  color: #3c2415;
+  margin-bottom: 15px;
+  filter: drop-shadow(0 2px 4px rgba(60, 36, 21, 0.15));
+}
+
+.splash-brand-tamil {
+  font-family: 'Arima Madurai', serif;
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: #3c2415;
+  margin: 0;
+  opacity: 0;
+  animation: fade-scale-up 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.3s;
+}
+
+.splash-brand-english {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #857256;
+  margin: 0;
+  opacity: 0;
+  animation: fade-scale-up 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.6s;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fade-scale-up {
+  0% {
+    opacity: 0;
+    transform: scale(0.92) translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Login Screen styling */
+.login-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #ecdcb9;
+  background-image: 
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.15' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.015 0'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.7'/%3E%3C/svg%3E"), 
+    radial-gradient(circle at top right, #fdfaf2 0%, #ecdcb9 100%);
+  display: flex;
+  flex-direction: column;
+  z-index: 9999;
+}
+
+.login-top-bar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1.5rem 2rem;
+  width: 100%;
+}
+
+.login-card {
+  margin: auto;
+  background: #fdfaf2;
+  border: 1px solid #d8c8a8;
+  box-shadow: 0 10px 30px rgba(60, 36, 21, 0.08), 
+              inset 0 0 60px rgba(216, 200, 168, 0.2);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 440px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.login-illustration {
+  margin-bottom: 1.5rem;
+}
+
+.login-gopuram {
+  color: #3c2415;
+  filter: drop-shadow(0 2px 4px rgba(60, 36, 21, 0.12));
+}
+
+.login-brand {
+  font-family: 'Arima Madurai', serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #3c2415;
+  margin-bottom: 0.6rem;
+}
+
+.login-subtitle {
+  font-family: 'Mukta Malar', sans-serif;
+  font-size: 0.95rem;
+  color: #857256;
+  line-height: 1.5;
+  margin-bottom: 2.2rem;
+  max-width: 320px;
+}
+
+.btn-google-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.8rem 1.5rem;
+  background: #fdfaf2;
+  border: 1.5px solid #3c2415;
+  border-radius: 30px;
+  color: #3c2415;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: 0 2px 4px rgba(60, 36, 21, 0.06);
+}
+
+.btn-google-login:hover {
+  background: #3c2415;
+  color: #fdfaf2;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(60, 36, 21, 0.12);
+}
+
+.btn-google-login:active {
+  transform: translateY(0);
+}
+
+.login-disclaimer {
+  font-family: 'Mukta Malar', sans-serif;
+  font-size: 0.75rem;
+  color: #857256;
+  line-height: 1.4;
+  margin-top: 1.8rem;
+  opacity: 0.8;
+}
+
+/* Sidebar user profile styling */
+.user-profile-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 8px 10px;
+  background: rgba(216, 200, 168, 0.15);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  width: 100%;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  object-fit: cover;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.2;
+}
+
+.user-name {
+  font-family: 'Mukta Malar', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.btn-logout {
+  background: transparent;
+  border: none;
+  color: var(--accent-color);
+  font-family: 'Mukta Malar', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  transition: color var(--transition-fast);
+}
+
+.btn-logout:hover {
+  color: var(--accent-hover);
+}
+
 .lang-arrow {
   color: var(--text-muted);
   font-size: 0.75rem;

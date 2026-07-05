@@ -24,6 +24,8 @@ export const Sidebar: React.FC = () => {
     events,
     importEvents,
     language,
+    user,
+    logout,
   } = useCalendar();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -131,6 +133,17 @@ export const Sidebar: React.FC = () => {
             )}
           </div>
         </div>
+        {user && (
+          <div className="user-profile-bar">
+            <img src={user.avatar} alt={user.name} className="user-avatar" />
+            <div className="user-info">
+              <span className="user-name">{user.name}</span>
+              <button className="btn-logout" onClick={logout} title={language === 'ta' ? "வெளியேறு" : "Logout"}>
+                {language === 'ta' ? "வெளியேறு" : "Logout"}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="sidebar-scrollable">

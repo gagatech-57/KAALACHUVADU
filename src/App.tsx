@@ -7,9 +7,39 @@ import { WeekView } from './components/WeekView';
 import { DayView } from './components/DayView';
 import { AgendaView } from './components/AgendaView';
 import { EventModal } from './components/EventModal';
+import { LoginScreen } from './components/LoginScreen';
+
+const SplashScreen: React.FC = () => {
+  return (
+    <div className="splash-container">
+      <div className="splash-content">
+        <svg className="splash-wheel" width="80" height="80" viewBox="0 0 100 100" fill="none" stroke="#3c2415" strokeWidth="2.5">
+          <circle cx="50" cy="50" r="40" strokeWidth="1.5" strokeDasharray="3 2" />
+          <circle cx="50" cy="50" r="30" />
+          <circle cx="50" cy="50" r="8" fill="#3c2415" />
+          <path d="M50 10 L50 90 M10 50 L90 50 M22 22 L78 78 M22 78 L78 22" />
+          <polygon points="50,5 53,20 47,20" fill="#3c2415" />
+          <polygon points="50,95 53,80 47,80" fill="#3c2415" />
+          <polygon points="95,50 80,53 80,47" fill="#3c2415" />
+          <polygon points="5,50 20,53 20,47" fill="#3c2415" />
+        </svg>
+        <h1 className="splash-brand-tamil">காலச்சுவடு</h1>
+        <h2 className="splash-brand-english">KAALACHUVADU</h2>
+      </div>
+    </div>
+  );
+};
 
 const CalendarAppContent: React.FC = () => {
-  const { currentView, language } = useCalendar();
+  const { currentView, language, user } = useCalendar();
+  const [showSplash, setShowSplash] = React.useState(true);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const renderActiveView = () => {
     switch (currentView) {
@@ -25,6 +55,14 @@ const CalendarAppContent: React.FC = () => {
         return <MonthView />;
     }
   };
+
+  if (showSplash) {
+    return <SplashScreen />;
+  }
+
+  if (!user) {
+    return <LoginScreen />;
+  }
 
   return (
     <div className="app-container">

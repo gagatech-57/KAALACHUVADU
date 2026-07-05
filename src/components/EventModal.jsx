@@ -190,7 +190,7 @@ export const EventModal = () => {
           </button>
         </div>
 
-        <form onSubmit={handleSave} className="modal-form">
+        <form id="event-form" onSubmit={handleSave} className="modal-form">
           {/* Title Field */}
           <div className="form-group">
             <label className="form-label">நிகழ்ச்சியின் தலைப்பு *</label>
@@ -334,58 +334,69 @@ export const EventModal = () => {
               rows={3}
             />
           </div>
-
-          {/* Modal Actions */}
-          <div className="modal-actions-footer">
-            {selectedEventForEdit && (
-              <button
-                type="button"
-                className="btn btn-delete-modal"
-                onClick={handleDelete}
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '4px' }}>
-                  <polyline points="3 6 5 6 21 6"></polyline>
-                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                </svg>
-                நீக்கு
-              </button>
-            )}
-            <div className="right-action-btns">
-              <button type="button" className="btn btn-secondary" onClick={handleClose}>
-                ரத்து செய்
-              </button>
-              <button type="submit" className="btn btn-primary">
-                நிகழ்வைச் சேமி
-              </button>
-            </div>
-          </div>
         </form>
+
+        {/* Modal Actions — sticky footer outside the scrollable form */}
+        <div className="modal-actions-footer">
+          {selectedEventForEdit && (
+            <button
+              type="button"
+              className="btn btn-delete-modal"
+              onClick={handleDelete}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '4px' }}>
+                <polyline points="3 6 5 6 21 6" />
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+              </svg>
+              நீக்கு
+            </button>
+          )}
+          <div className="right-action-btns">
+            <button type="button" className="btn btn-secondary" onClick={handleClose}>
+              ரத்து செய்
+            </button>
+            <button type="submit" form="event-form" className="btn btn-primary">
+              நிகழ்வைச் சேமி
+            </button>
+          </div>
+        </div>
       </div>
 
       <style>{`
+        .modal-container {
+          display: flex;
+          flex-direction: column;
+          max-height: 90vh;
+        }
         .modal-header {
-          padding: 1.2rem 1.5rem;
+          padding: 1rem 1.2rem;
           border-bottom: 1px solid var(--border-color);
           display: flex;
           justify-content: space-between;
           align-items: center;
+          flex-shrink: 0;
         }
         .modal-title {
-          font-size: 1.2rem;
-          font-weight: 600;
+          font-size: 1.1rem;
+          font-weight: 700;
           color: var(--text-primary);
+          font-family: 'Mukta Malar', sans-serif;
         }
         .modal-close-btn {
           width: 32px;
           height: 32px;
-          font-size: 1.5rem;
+          font-size: 1.4rem;
           line-height: 1;
+          flex-shrink: 0;
         }
         .modal-form {
-          padding: 1.5rem;
+          padding: 1.2rem;
           display: flex;
           flex-direction: column;
-          gap: 1.2rem;
+          gap: 1rem;
+          overflow-y: auto;
+          flex-grow: 1;
+          overscroll-behavior: contain;
         }
         .form-group {
           display: flex;
@@ -394,13 +405,11 @@ export const EventModal = () => {
         }
         .form-row {
           display: flex;
-          gap: 12px;
+          gap: 10px;
         }
-        .flex-1 {
-          flex: 1;
-        }
+        .flex-1 { flex: 1; min-width: 0; }
         .form-label {
-          font-size: 0.8rem;
+          font-size: 0.78rem;
           font-weight: 600;
           color: var(--text-secondary);
           text-transform: uppercase;
@@ -408,7 +417,7 @@ export const EventModal = () => {
         }
         .form-input {
           width: 100%;
-          padding: 0.65rem 0.8rem;
+          padding: 0.6rem 0.75rem;
           border-radius: 10px;
           border: 1px solid var(--border-color);
           background-color: var(--bg-primary);
@@ -417,32 +426,18 @@ export const EventModal = () => {
           font-size: 0.9rem;
           outline: none;
           transition: all var(--transition-fast);
+          min-width: 0;
         }
         .form-input:focus {
           border-color: var(--accent-color);
           box-shadow: 0 0 0 2px var(--accent-light);
         }
-        .form-input.error {
-          border-color: #ef4444;
-        }
-        .form-input.error:focus {
-          box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.15);
-        }
-        .title-input {
-          font-size: 1.05rem;
-          font-weight: 500;
-        }
-        .form-textarea {
-          resize: none;
-        }
-        .error-text {
-          font-size: 0.75rem;
-          color: #ef4444;
-          font-weight: 500;
-        }
-        .checkbox-group {
-          padding: 4px 0;
-        }
+        .form-input.error { border-color: #ef4444; }
+        .form-input.error:focus { box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.15); }
+        .title-input { font-size: 1rem; font-weight: 500; }
+        .form-textarea { resize: none; }
+        .error-text { font-size: 0.75rem; color: #ef4444; font-weight: 500; }
+        .checkbox-group { padding: 2px 0; }
         .checkbox-label {
           display: flex;
           align-items: center;
@@ -452,9 +447,7 @@ export const EventModal = () => {
           color: var(--text-primary);
           user-select: none;
         }
-        .checkbox-input {
-          display: none;
-        }
+        .checkbox-input { display: none; }
         .checkbox-custom-indicator {
           width: 18px;
           height: 18px;
@@ -462,6 +455,7 @@ export const EventModal = () => {
           border: 2px solid var(--text-muted);
           display: inline-block;
           position: relative;
+          flex-shrink: 0;
           transition: all var(--transition-fast);
         }
         .checkbox-input:checked + .checkbox-custom-indicator {
@@ -471,26 +465,22 @@ export const EventModal = () => {
         .checkbox-input:checked + .checkbox-custom-indicator::after {
           content: "";
           position: absolute;
-          left: 5px;
-          top: 2px;
-          width: 4px;
-          height: 8px;
+          left: 5px; top: 2px;
+          width: 4px; height: 8px;
           border: solid white;
           border-width: 0 2px 2px 0;
           transform: rotate(45deg);
         }
-        .checkbox-text {
-          font-weight: 550;
-        }
+        .checkbox-text { font-weight: 600; }
         .color-swatch-picker {
           display: flex;
           align-items: center;
-          gap: 8px;
-          height: 38px;
+          gap: 6px;
+          flex-wrap: wrap;
+          min-height: 34px;
         }
         .active-color-preview {
-          width: 24px;
-          height: 24px;
+          width: 22px; height: 22px;
           border-radius: 50%;
           border: 2px solid white;
           box-shadow: 0 0 0 1px var(--text-muted);
@@ -499,34 +489,29 @@ export const EventModal = () => {
         .swatches-grid {
           display: flex;
           flex-wrap: wrap;
-          gap: 4px;
+          gap: 5px;
         }
         .swatch-btn {
-          width: 18px;
-          height: 18px;
+          width: 20px; height: 20px;
           border-radius: 50%;
-          border: 1px solid rgba(0, 0, 0, 0.1);
+          border: 1px solid rgba(0,0,0,0.1);
           cursor: pointer;
-          transition: all var(--transition-fast);
+          transition: transform var(--transition-fast);
         }
-        .swatch-btn:hover {
-          transform: scale(1.15);
-        }
-        .swatch-btn.active {
-          box-shadow: 0 0 0 2px var(--bg-secondary), 0 0 0 3.5px var(--accent-color);
-        }
+        .swatch-btn:hover { transform: scale(1.18); }
+        .swatch-btn.active { box-shadow: 0 0 0 2px var(--bg-secondary), 0 0 0 3.5px var(--accent-color); }
+
+        /* Sticky footer for action buttons */
         .modal-actions-footer {
           display: flex;
           justify-content: space-between;
+          align-items: center;
           border-top: 1px solid var(--border-color);
-          padding-top: 1.2rem;
-          margin-top: 0.5rem;
+          padding: 0.9rem 1.2rem;
+          flex-shrink: 0;
+          background-color: var(--bg-secondary);
         }
-        .right-action-btns {
-          display: flex;
-          gap: 8px;
-          margin-left: auto;
-        }
+        .right-action-btns { display: flex; gap: 8px; margin-left: auto; }
         .btn-delete-modal {
           color: #ef4444;
           background: transparent;
@@ -536,16 +521,25 @@ export const EventModal = () => {
           background-color: rgba(239, 68, 68, 0.08);
           border-color: #ef4444;
         }
-        @media (max-width: 500px) {
+
+        /* ── Mobile: full bottom sheet ── */
+        @media (max-width: 640px) {
           .modal-container {
-            border-radius: 0;
-            height: 100vh;
-            max-height: 100vh;
+            max-height: 92vh;
+            border-radius: 20px 20px 0 0;
+          }
+          .modal-form {
+            padding: 1rem;
+            gap: 0.85rem;
           }
           .form-row {
             flex-direction: column;
-            gap: 1.2rem;
+            gap: 0.85rem;
           }
+          .modal-actions-footer {
+            padding: 0.75rem 1rem;
+          }
+          .btn { font-size: 0.85rem; padding: 0.55rem 0.9rem; }
         }
       `}</style>
     </div>

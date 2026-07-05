@@ -201,7 +201,7 @@ export const DayView = () => {
           height: 1440px;
         }
         .day-time-scale {
-          width: 60px;
+          width: 54px;
           flex-shrink: 0;
           border-right: 1px solid var(--border-color);
           background-color: var(--bg-primary);
@@ -210,6 +210,7 @@ export const DayView = () => {
         .day-slots-column {
           flex-grow: 1;
           position: relative;
+          min-width: 0;
         }
         .day-hour-slot {
           height: 60px;
@@ -220,9 +221,9 @@ export const DayView = () => {
           background-color: var(--bg-hover);
         }
         .day-event-card {
-          left: 8px;
-          right: 24px; /* leave space for scrollbar visual balance */
-          padding: 8px 12px;
+          left: 4px;
+          right: 4px;
+          padding: 6px 10px;
         }
         .day-event-desc {
           font-size: 0.7rem;
@@ -233,6 +234,13 @@ export const DayView = () => {
           -webkit-box-orient: vertical;
           overflow: hidden;
           font-family: 'Mukta Malar', sans-serif;
+        }
+        @media (max-width: 640px) {
+          .day-time-scale { width: 46px; }
+          .hour-scale-cell span { font-size: 0.65rem; }
+          .day-event-card { left: 2px; right: 2px; padding: 4px 6px; }
+          .timed-event-time { font-size: 0.7rem; }
+          .timed-event-title { font-size: 0.78rem; }
         }
       `}</style>
     </div>

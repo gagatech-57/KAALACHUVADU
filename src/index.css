@@ -35,6 +35,8 @@
   /* Calendar Specifics */
   --month-grid-height: calc(100vh - 120px);
   --week-column-width: calc((100% - 60px) / 7);
+  --header-height: 56px;
+  --mobile-tabs-height: 52px;
 }
 
 /* Reset / Global styles */
@@ -75,7 +77,9 @@ body {
   background: var(--text-muted);
 }
 
-/* Main Layout Styles */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Main Layout
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 .app-container {
   display: flex;
   height: 100vh;
@@ -84,8 +88,9 @@ body {
   position: relative;
 }
 
+/* ── Sidebar (desktop: push layout) ── */
 .sidebar-panel {
-  width: 320px;
+  width: 300px;
   background-color: var(--bg-secondary);
   border-right: 1px solid var(--border-color);
   height: 100%;
@@ -93,16 +98,17 @@ body {
   flex-direction: column;
   flex-shrink: 0;
   transition: transform var(--transition-normal), width var(--transition-normal);
-  z-index: 10;
+  z-index: 50;
   overflow: hidden;
 }
 
 .sidebar-panel.collapsed {
-  transform: translateX(-320px);
+  transform: translateX(-300px);
   width: 0;
   border-right: 0;
 }
 
+/* ── Main content area ── */
 .main-content {
   flex-grow: 1;
   height: 100%;
@@ -111,6 +117,35 @@ body {
   overflow: hidden;
   position: relative;
   background-color: var(--bg-primary);
+  min-width: 0;
+}
+
+/* ── Mobile: sidebar becomes full-screen overlay ── */
+@media (max-width: 640px) {
+  .sidebar-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 85vw;
+    max-width: 320px;
+    height: 100%;
+    transform: translateX(-100%);
+    box-shadow: var(--shadow-lg);
+    border-right: 1px solid var(--border-color);
+  }
+  .sidebar-panel:not(.collapsed) {
+    transform: translateX(0);
+  }
+  .sidebar-panel.collapsed {
+    transform: translateX(-100%);
+    width: 85vw;
+    border-right: 1px solid var(--border-color);
+  }
+  /* Main content always takes full width on mobile */
+  .main-content {
+    width: 100%;
+    padding-bottom: var(--mobile-tabs-height);
+  }
 }
 
 /* Buttons */
@@ -194,17 +229,35 @@ body {
   background-color: var(--bg-secondary);
   border: 1px solid var(--glass-border);
   border-radius: 20px;
-  width: 100%;
+  width: calc(100% - 2rem);
   max-width: 520px;
-  max-height: 90vh;
+  max-height: 92vh;
   box-shadow: var(--shadow-lg);
   overflow-y: auto;
   transform: scale(0.9) translateY(20px);
   transition: transform var(--transition-normal);
+  margin: 0 1rem;
 }
 
 .modal-overlay.open .modal-container {
   transform: scale(1) translateY(0);
+}
+
+@media (max-width: 640px) {
+  .modal-overlay {
+    align-items: flex-end;
+    padding-bottom: var(--mobile-tabs-height);
+  }
+  .modal-container {
+    border-radius: 20px 20px 0 0;
+    max-height: 88vh;
+    width: 100%;
+    margin: 0;
+    transform: translateY(100%);
+  }
+  .modal-overlay.open .modal-container {
+    transform: translateY(0);
+  }
 }
 
 /* Grid Layouts */
@@ -353,8 +406,21 @@ body {
 .calendar-view-wrapper {
   flex-grow: 1;
   overflow: auto;
-  padding: 1.2rem;
+  padding: 1rem;
   position: relative;
+  min-height: 0;
+}
+
+@media (max-width: 640px) {
+  .calendar-view-wrapper {
+    padding: 0.4rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .calendar-view-wrapper {
+    padding: 0.2rem;
+  }
 }
 
 .ornament-top-right {
@@ -412,14 +478,21 @@ body {
 
 .heritage-footer {
   text-align: center;
-  padding: 0.8rem 0;
+  padding: 0.6rem 0;
   border-top: 1px solid var(--border-color);
   background-color: var(--bg-secondary);
   font-family: 'Arima Madurai', serif;
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   color: var(--text-secondary);
   letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .heritage-footer { display: none; }
+  .ornament-top-right { display: none; }
+  .ornament-bottom-right { display: none; }
 }
 
 .heritage-quote {
@@ -478,15 +551,20 @@ body {
 }
 
 .day-number {
-  font-size: 1.45rem !important; /* Larger dates in Month View */
+  font-size: 1.1rem !important;
 }
 
 .week-day-num {
-  font-size: 1.6rem !important; /* Larger dates in Week View */
+  font-size: 1.4rem !important;
 }
 
 .mini-cal-day-cell {
-  font-size: 0.95rem !important; /* Keeps mini-calendar cell numbers clean */
+  font-size: 0.9rem !important;
+}
+
+@media (max-width: 640px) {
+  .day-number { font-size: 0.82rem !important; }
+  .week-day-num { font-size: 1rem !important; }
 }
 
 /* Add custom scrollbar for parchment style */

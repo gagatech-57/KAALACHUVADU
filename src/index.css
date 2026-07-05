@@ -1,0 +1,546 @@
+@import url('https://fonts.googleapis.com/css2?family=Arima+Madurai:wght@400;500;700;800&family=Mukta+Malar:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+:root {
+  /* Font Family */
+  font-family: 'Mukta Malar', sans-serif;
+  line-height: 1.5;
+  font-weight: 500;
+
+  color-scheme: light;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.35s ease;
+
+  /* Theme variables - Tamil Heritage Parchment Aesthetic */
+  --bg-primary: #ecdcb9;
+  --bg-secondary: #fdfaf2;
+  --bg-tertiary: #ecdcb9;
+  --bg-hover: #f5eed8;
+  --text-primary: #3c2415;
+  --text-secondary: #745137;
+  --text-muted: #a68c74;
+  --border-color: #d8c8a8;
+  --accent-color: #5d3e1a;
+  --accent-hover: #452c10;
+  --accent-light: rgba(93, 62, 26, 0.08);
+  --shadow-sm: 0 1px 3px rgba(60, 36, 21, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(60, 36, 21, 0.08), 0 2px 4px -2px rgba(60, 36, 21, 0.08);
+  --shadow-lg: 0 10px 15px -3px rgba(60, 36, 21, 0.12), 0 4px 6px -4px rgba(60, 36, 21, 0.12);
+  --glass-bg: rgba(253, 250, 242, 0.85);
+  --glass-border: rgba(93, 62, 26, 0.08);
+  --glass-blur: blur(8px);
+
+  /* Calendar Specifics */
+  --month-grid-height: calc(100vh - 120px);
+  --week-column-width: calc((100% - 60px) / 7);
+}
+
+/* Reset / Global styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow: hidden;
+  background-color: #ecdcb9;
+  background-image: 
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.15' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.015 0'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.7'/%3E%3C/svg%3E"), 
+    radial-gradient(circle at top right, #fdfaf2 0%, #ecdcb9 100%);
+  background-blend-mode: overlay;
+  transition: background var(--transition-normal), color var(--transition-normal);
+}
+
+/* Scrollbar Customization */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Main Layout Styles */
+.app-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+}
+
+.sidebar-panel {
+  width: 320px;
+  background-color: var(--bg-secondary);
+  border-right: 1px solid var(--border-color);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  transition: transform var(--transition-normal), width var(--transition-normal);
+  z-index: 10;
+  overflow: hidden;
+}
+
+.sidebar-panel.collapsed {
+  transform: translateX(-320px);
+  width: 0;
+  border-right: 0;
+}
+
+.main-content {
+  flex-grow: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  background-color: var(--bg-primary);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.2rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  gap: 0.5rem;
+  outline: none;
+}
+
+.btn:hover {
+  background-color: var(--bg-hover);
+  border-color: var(--text-muted);
+}
+
+.btn-primary {
+  background-color: var(--accent-color);
+  color: var(--bg-secondary);
+  border-color: var(--accent-color);
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-hover);
+  border-color: var(--accent-hover);
+  box-shadow: 0 0 12px rgba(0, 245, 255, 0.3);
+}
+
+.btn-icon {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border-radius: 50%;
+}
+
+.btn-text {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+}
+
+.btn-text:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+/* Modals */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-normal);
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-container {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  box-shadow: var(--shadow-lg);
+  overflow-y: auto;
+  transform: scale(0.9) translateY(20px);
+  transition: transform var(--transition-normal);
+}
+
+.modal-overlay.open .modal-container {
+  transform: scale(1) translateY(0);
+}
+
+/* Grid Layouts */
+.month-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: auto repeat(6, 1fr);
+  height: 100%;
+  border-left: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-color);
+}
+
+.month-cell {
+  background-color: var(--bg-secondary);
+  border-right: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  min-height: 80px;
+  overflow: hidden;
+  position: relative;
+  transition: background-color var(--transition-fast);
+}
+
+.month-cell:hover {
+  background-color: var(--bg-primary);
+}
+
+.month-cell.outside {
+  background-color: var(--bg-primary);
+  opacity: 0.5;
+}
+
+.month-cell.today {
+  background-color: var(--accent-light);
+}
+
+.month-cell.today .day-number {
+  background-color: var(--accent-color);
+  color: var(--bg-secondary);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.day-number-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  padding: 2px;
+}
+
+.day-number {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.day-label {
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 10px 0;
+  color: var(--text-secondary);
+  background-color: var(--bg-secondary);
+  border-right: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Event Badges */
+.event-badge {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  color: white;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+  transition: filter var(--transition-fast), transform var(--transition-fast);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.event-badge:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.event-badge.all-day {
+  border-left: 3px solid rgba(0, 0, 0, 0.3);
+}
+
+.more-events-indicator {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  padding: 2px 4px;
+  cursor: pointer;
+  font-weight: 600;
+  text-align: center;
+}
+
+.more-events-indicator:hover {
+  text-decoration: underline;
+}
+
+/* Responsive fixes */
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+  
+  .sidebar-panel {
+    width: 100%;
+    height: auto;
+    position: absolute;
+    top: 50px;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .sidebar-panel.collapsed {
+    transform: translateX(-100%);
+    width: 100%;
+  }
+
+  .sidebar-panel:not(.collapsed) {
+    transform: translateX(0);
+    width: 100%;
+  }
+}
+
+/* Tamil Heritage Theme Ornaments & Layout Styles */
+
+.calendar-view-wrapper {
+  flex-grow: 1;
+  overflow: auto;
+  padding: 1.2rem;
+  position: relative;
+}
+
+.ornament-top-right {
+  position: absolute;
+  top: 60px;
+  right: 15px;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0.22;
+}
+
+.ornament-bottom-right {
+  position: absolute;
+  bottom: 50px;
+  right: 15px;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0.25;
+}
+
+.ornament-sidebar-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.8;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 5px;
+}
+
+.logo-text-wrapper {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+  margin-left: 8px;
+}
+
+.logo-text-tamil {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  font-family: 'Arima Madurai', serif;
+}
+
+.logo-text-english {
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  font-family: 'Playfair Display', serif;
+}
+
+.heritage-footer {
+  text-align: center;
+  padding: 0.8rem 0;
+  border-top: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+  font-family: 'Arima Madurai', serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+}
+
+.heritage-quote {
+  font-style: italic;
+  position: relative;
+}
+
+/* Theme Switcher and dark overrides removed */
+
+/* Override event tags readability */
+.event-badge {
+  font-family: 'Mukta Malar', sans-serif !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  color: #3c2415 !important; /* Elegant wood-brown contrast */
+  border-radius: 6px !important;
+  padding: 2px 8px 4px 8px !important; /* Balanced flexbox padding */
+  box-shadow: 0 1px 2px rgba(60, 36, 21, 0.08) !important;
+  display: flex !important;
+  align-items: center !important;
+  min-height: 28px !important;
+}
+
+.category-checkbox-custom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
+}
+
+.category-checkbox-custom.checked {
+  background-color: var(--cat-color);
+  color: var(--bg-secondary);
+  border-color: transparent;
+}
+
+.category-label-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Font override for numbers and days */
+.day-number, 
+.mini-cal-day-cell, 
+.week-day-num,
+.day-hour-label span {
+  font-family: 'Playfair Display', serif !important;
+  font-weight: 700;
+}
+
+.day-number {
+  font-size: 1.45rem !important; /* Larger dates in Month View */
+}
+
+.week-day-num {
+  font-size: 1.6rem !important; /* Larger dates in Week View */
+}
+
+.mini-cal-day-cell {
+  font-size: 0.95rem !important; /* Keeps mini-calendar cell numbers clean */
+}
+
+/* Add custom scrollbar for parchment style */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Language Switcher styling */
+.lang-switcher {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: var(--bg-hover);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  height: 32px;
+  color: var(--text-secondary);
+}
+
+.lang-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-weight: 700;
+  padding: 0 4px;
+  transition: color var(--transition-fast);
+}
+
+.lang-btn.active {
+  color: var(--accent-color);
+}
+
+.lang-arrow {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  user-select: none;
+  opacity: 0.6;
+}

@@ -653,9 +653,14 @@ body {
   margin-bottom: 1.5rem;
 }
 
-.login-gopuram {
-  color: #3c2415;
-  filter: drop-shadow(0 2px 4px rgba(60, 36, 21, 0.12));
+.login-temple-image {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3.5px solid #3c2415;
+  box-shadow: 0 4px 12px rgba(60, 36, 21, 0.15);
+  display: block;
 }
 
 .login-brand {

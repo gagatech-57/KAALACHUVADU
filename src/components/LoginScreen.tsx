@@ -1,5 +1,6 @@
 import React from 'react';
 import { useCalendar } from '../context/CalendarContext';
+import templeImg from '../assets/temple_login.png';
 
 export const LoginScreen: React.FC = () => {
   const { language, setLanguage, setUser, addEvent } = useCalendar();
@@ -95,17 +96,9 @@ export const LoginScreen: React.FC = () => {
       </div>
 
       <div className="login-card">
-        {/* Intricate Gopuram Tower illustration */}
+        {/* Real-world temple image illustration */}
         <div className="login-illustration">
-          <svg className="login-gopuram" width="180" height="200" viewBox="0 0 120 130" fill="none" stroke="#3c2415" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M10 120 L110 120 M15 110 L105 110 M20 98 L100 98 M25 86 L95 86 M30 74 L90 74 M35 62 L85 62 M40 50 L80 50 M45 38 L75 38 M50 26 L70 26 M55 12 L65 12 M60 2 L60 12" />
-            <path d="M15 110 L20 120 M105 110 L100 120 M20 98 L25 110 M100 98 L95 110 M25 86 L30 98 M95 86 L90 98 M30 74 L35 86 M90 74 L85 86 M35 62 L40 74 M85 62 L80 74 M40 50 L45 62 M80 50 L75 62 M45 38 L50 50 M75 38 L70 50 M50 26 L55 38 M70 26 L65 38 M55 12 L57 26 M65 12 L63 26" />
-            <path d="M50 120 L50 110 A10 10 0 0 1 70 110 L70 120" strokeWidth="2" />
-            <path d="M30 110 L30 120 M90 110 L90 120 M35 98 L35 110 M85 98 L85 110 M40 86 L40 98 M80 86 L80 98 M45 74 L45 86 M75 74 L75 86 M50 62 L50 74 M70 62 L70 74 M55 50 L55 62 M65 50 L65 62 M58 38 L58 50 M62 38 L62 50" />
-            <circle cx="57" cy="6" r="2" fill="#3c2415" />
-            <circle cx="60" cy="5" r="2.5" fill="#3c2415" />
-            <circle cx="63" cy="6" r="2" fill="#3c2415" />
-          </svg>
+          <img src={templeImg} alt="Tamil Nadu Temple Gopuram" className="login-temple-image" />
         </div>
 
         <h1 className="login-brand">

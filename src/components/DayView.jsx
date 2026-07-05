@@ -98,7 +98,7 @@ export const DayView = () => {
           <div className="day-time-scale">
             {hours.map((hour) => (
               <div key={hour} className="hour-scale-cell">
-                <span>{formatHour(hour)}</span>
+                <span className="hour-label-text">{formatHour(hour)}</span>
               </div>
             ))}
           </div>
@@ -201,11 +201,29 @@ export const DayView = () => {
           height: 1440px;
         }
         .day-time-scale {
-          width: 54px;
+          width: 58px;
           flex-shrink: 0;
           border-right: 1px solid var(--border-color);
           background-color: var(--bg-primary);
           user-select: none;
+        }
+        .hour-scale-cell {
+          height: 60px;
+          position: relative;
+          border-bottom: 1px solid var(--border-color);
+        }
+        .hour-label-text {
+          position: absolute;
+          top: -8px;
+          right: 6px;
+          font-size: 0.68rem;
+          font-weight: 600;
+          color: var(--text-muted);
+          white-space: nowrap;
+          font-family: 'Playfair Display', serif;
+          background-color: var(--bg-primary);
+          padding: 0 2px;
+          line-height: 1;
         }
         .day-slots-column {
           flex-grow: 1;
@@ -236,11 +254,11 @@ export const DayView = () => {
           font-family: 'Mukta Malar', sans-serif;
         }
         @media (max-width: 640px) {
-          .day-time-scale { width: 46px; }
-          .hour-scale-cell span { font-size: 0.65rem; }
-          .day-event-card { left: 2px; right: 2px; padding: 4px 6px; }
-          .timed-event-time { font-size: 0.7rem; }
-          .timed-event-title { font-size: 0.78rem; }
+          .day-time-scale { width: 48px; }
+          .hour-label-text { font-size: 0.6rem; right: 4px; }
+          .day-event-card { left: 2px; right: 2px; padding: 3px 5px; }
+          .timed-event-time { font-size: 0.68rem; }
+          .timed-event-title { font-size: 0.76rem; }
         }
       `}</style>
     </div>

@@ -13,6 +13,8 @@ export const CalendarHeader = () => {
     navigateNext,
     language,
     setLanguage,
+    user,
+    logout,
   } = useCalendar();
 
   const handleToday = () => setCurrentDate(new Date());
@@ -43,9 +45,7 @@ export const CalendarHeader = () => {
 
   const getShortTitle = () => {
     const locale = language === 'ta' ? 'ta-IN' : 'en-US';
-    if (currentView === 'day') {
-      return currentDate.toLocaleDateString(locale, { month: 'short', day: 'numeric' });
-    }
+    if (currentView === 'day') return currentDate.toLocaleDateString(locale, { month: 'short', day: 'numeric' });
     return currentDate.toLocaleDateString(locale, { year: 'numeric', month: 'short' });
   };
 
@@ -101,7 +101,7 @@ export const CalendarHeader = () => {
         </div>
       </div>
 
-      {/* RIGHT: view tabs (desktop) */}
+      {/* RIGHT: view tabs (desktop) + avatar */}
       <div className="header-right">
         <div className="view-tabs">
           {views.map(v => (
@@ -115,6 +115,33 @@ export const CalendarHeader = () => {
           ))}
         </div>
       </div>
+
+      {/* Mobile: avatar button in header (right side) */}
+      {user && (
+        <div className="mobile-avatar-area">
+          {user.avatar ? (
+            <img
+              src={user.avatar}
+              alt={user.name || 'User'}
+              className="mobile-avatar-img"
+              onClick={toggleSidebar}
+              title={user.name}
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.nextSibling && (e.target.nextSibling.style.display = 'flex');
+              }}
+            />
+          ) : null}
+          <div
+            className="mobile-avatar-initials"
+            onClick={toggleSidebar}
+            title={user.name}
+            style={{ display: user.avatar ? 'none' : 'flex' }}
+          >
+            {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+          </div>
+        </div>
+      )}
 
       {/* BOTTOM BAR: view tabs on mobile */}
       <div className="mobile-view-tabs">
@@ -174,18 +201,9 @@ export const CalendarHeader = () => {
           gap: 6px;
           flex-shrink: 0;
         }
-        .btn-today {
-          font-size: 0.82rem;
-          padding: 0.4rem 0.85rem;
-        }
-        .nav-arrows {
-          display: flex;
-          gap: 2px;
-        }
-        .btn-nav-arrow {
-          width: 30px;
-          height: 30px;
-        }
+        .btn-today { font-size: 0.82rem; padding: 0.4rem 0.85rem; }
+        .nav-arrows { display: flex; gap: 2px; }
+        .btn-nav-arrow { width: 30px; height: 30px; }
         .view-tabs {
           display: flex;
           background-color: var(--bg-primary);
@@ -213,6 +231,9 @@ export const CalendarHeader = () => {
           box-shadow: var(--shadow-sm);
         }
 
+        /* Mobile avatar — hidden on desktop */
+        .mobile-avatar-area { display: none; }
+
         /* Mobile bottom tabs bar — hidden on desktop */
         .mobile-view-tabs { display: none; }
 
@@ -225,15 +246,48 @@ export const CalendarHeader = () => {
         /* ── Mobile (≤640px) ── */
         @media (max-width: 640px) {
           .calendar-header {
-            padding: 0 0.7rem;
+            padding: 0 0.6rem;
             height: 50px;
+            gap: 6px;
           }
           .title-full { display: none; }
           .title-short { display: inline; }
-          .header-title { font-size: 0.95rem; flex: 0 0 auto; }
+          .header-title { font-size: 0.9rem; flex: 0 0 auto; max-width: 90px; }
           .btn-today { display: none; }
-          /* Hide desktop view tabs */
           .header-right { display: none; }
+
+          /* Avatar in mobile header */
+          .mobile-avatar-area {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+          }
+          .mobile-avatar-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-color);
+            cursor: pointer;
+            transition: opacity var(--transition-fast);
+          }
+          .mobile-avatar-img:hover { opacity: 0.85; }
+          .mobile-avatar-initials {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            color: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border: 2px solid var(--accent-color);
+            cursor: pointer;
+            flex-shrink: 0;
+          }
 
           /* Show mobile bottom tab bar */
           .mobile-view-tabs {

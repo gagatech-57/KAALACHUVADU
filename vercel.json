@@ -2,6 +2,10 @@
   "cleanUrls": true,
   "rewrites": [
     {
+      "source": "/api/(.*)",
+      "destination": "/api/index.js"
+    },
+    {
       "source": "/(robots.txt|sitemap.xml|favicon.svg|google6d6c51ab1c16c0ea.html)",
       "destination": "/$1"
     },

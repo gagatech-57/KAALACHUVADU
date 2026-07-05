@@ -615,26 +615,99 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   }, [user, language]);
 
-
+  // Synchronize events cache with MongoDB on login/reload
+  useEffect(() => {
+    if (user) {
+      const fetchAndSyncEvents = async () => {
+        try {
+          const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : '';
+          
+          const savedLocal = localStorage.getItem('calendar_events');
+          const localEvents = savedLocal ? JSON.parse(savedLocal) : [];
+          
+          // Sync offline events first to prevent data loss
+          const syncRes = await fetch(`${API_BASE}/api/events/sync`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: user.email, events: localEvents })
+          });
+          
+          if (syncRes.ok) {
+            const serverEvents = await syncRes.json();
+            setEvents(serverEvents);
+            localStorage.setItem('calendar_events', JSON.stringify(serverEvents));
+          } else {
+            const getRes = await fetch(`${API_BASE}/api/events?email=${encodeURIComponent(user.email)}`);
+            if (getRes.ok) {
+              const serverEvents = await getRes.json();
+              setEvents(serverEvents);
+              localStorage.setItem('calendar_events', JSON.stringify(serverEvents));
+            }
+          }
+        } catch (err) {
+          console.error('Error syncing events with MongoDB:', err);
+        }
+      };
+      fetchAndSyncEvents();
+    }
+  }, [user]);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(prev => !prev);
   };
 
-  const addEvent = (eventData: Omit<CalendarEvent, 'id'>) => {
+  const addEvent = async (eventData: Omit<CalendarEvent, 'id'>) => {
     const newEvent: CalendarEvent = {
       ...eventData,
       id: Math.random().toString(36).substring(2, 9) + Date.now().toString(36),
     };
+    
     setEvents(prev => [...prev, newEvent]);
+    
+    if (user) {
+      try {
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : '';
+        await fetch(`${API_BASE}/api/events`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: user.email, event: newEvent })
+        });
+      } catch (err) {
+        console.error('Error saving event to MongoDB:', err);
+      }
+    }
   };
 
-  const updateEvent = (updatedEvent: CalendarEvent) => {
+  const updateEvent = async (updatedEvent: CalendarEvent) => {
     setEvents(prev => prev.map(e => (e.id === updatedEvent.id ? updatedEvent : e)));
+    
+    if (user) {
+      try {
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : '';
+        await fetch(`${API_BASE}/api/events/${updatedEvent.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: user.email, event: updatedEvent })
+        });
+      } catch (err) {
+        console.error('Error updating event in MongoDB:', err);
+      }
+    }
   };
 
-  const deleteEvent = (id: string) => {
+  const deleteEvent = async (id: string) => {
     setEvents(prev => prev.filter(e => e.id !== id));
+    
+    if (user) {
+      try {
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : '';
+        await fetch(`${API_BASE}/api/events/${id}?email=${encodeURIComponent(user.email)}`, {
+          method: 'DELETE'
+        });
+      } catch (err) {
+        console.error('Error deleting event from MongoDB:', err);
+      }
+    }
   };
 
   const toggleCategory = (category: Category) => {
@@ -648,19 +721,28 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const importEvents = (importedEvents: CalendarEvent[]): boolean => {
     if (!Array.isArray(importedEvents)) return false;
     
-    // Quick validation of array elements
     const valid = importedEvents.every(e => 
       e && typeof e.id === 'string' && typeof e.title === 'string' && typeof e.startDate === 'string'
     );
     
     if (!valid) return false;
 
-    // Deduplicate or append - we'll merge them, overwriting same IDs, appending new ones
     setEvents(prev => {
       const mergedMap = new Map<string, CalendarEvent>();
       prev.forEach(e => mergedMap.set(e.id, e));
       importedEvents.forEach(e => mergedMap.set(e.id, e));
-      return Array.from(mergedMap.values());
+      const mergedArray = Array.from(mergedMap.values());
+      
+      if (user) {
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : '';
+        fetch(`${API_BASE}/api/events/sync`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: user.email, events: mergedArray })
+        }).catch(err => console.error('Error syncing imported events:', err));
+      }
+      
+      return mergedArray;
     });
     return true;
   };

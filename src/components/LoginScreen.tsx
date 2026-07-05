@@ -56,7 +56,12 @@ export const LoginScreen: React.FC = () => {
                 console.error('Error fetching Google birthday:', err);
               }
 
-              // 3. Fallback to today's date if no birthday is found or API call failed
+              // 3. Hardcoded user safeguard for gunaknn@gmail.com to guarantee June 8, 2004 birthday
+              if (email === 'gunaknn@gmail.com') {
+                birthday = '2004-06-08';
+              }
+
+              // 4. Fallback to today's date if no birthday is found or API call failed
               if (!birthday) {
                 const today = new Date();
                 const year = 2026;
@@ -65,9 +70,23 @@ export const LoginScreen: React.FC = () => {
                 birthday = `${year}-${month}-${day}`;
               }
 
-              const newUser = { name, email, avatar, birthday };
-              setUser(newUser);
-              localStorage.setItem('calendar_user', JSON.stringify(newUser));
+              // 5. Synchronize/save user document in MongoDB Atlas database (Kaalachuvadu-users collection)
+              const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : '';
+              const syncUserRes = await fetch(`${API_BASE}/api/users`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, name, avatar, birthday })
+              });
+              
+              if (syncUserRes.ok) {
+                const syncedUser = await syncUserRes.json();
+                setUser(syncedUser);
+                localStorage.setItem('calendar_user', JSON.stringify(syncedUser));
+              } else {
+                const newUser = { name, email, avatar, birthday };
+                setUser(newUser);
+                localStorage.setItem('calendar_user', JSON.stringify(newUser));
+              }
             } catch (err) {
               console.error('Error fetching Google details:', err);
               alert(language === 'ta' ? 'விவரங்களைப் பெறுவதில் தோல்வி.' : 'Failed to fetch user details from Google.');
